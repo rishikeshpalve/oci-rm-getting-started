@@ -1,0 +1,62 @@
+locale: "en"
+
+variableGroups:
+  - title: "Destination"
+    variables:
+      - compartment_ocid
+      - ${region}
+      - ${localAD}
+  - title: "Instance Details"
+    variables:
+      - ${numInstances}
+      - ${instanceImageOCID}
+      - ${instanceShape}
+  - title: "SSH Public Key"
+    variables:
+      - ${ssh_public_key}
+
+variables:
+  compartment_ocid:
+    type: oci:identity:compartment:id
+    required: true
+    title: Compartment OCID
+
+  region:
+    type: oci:identity:region:name
+    required: true
+    title: Region
+
+  localAD:
+    type: oci:identity:availabilitydomain:name
+    required: true
+    title: Availability Domain
+    dependsOn:
+      compartmentId: compartment_ocid
+
+  numInstances:
+    type: integer
+    required: true
+    title: Number of Instances
+    minimum: 1
+    maximum: 10
+    multipleOf: 1
+
+  instanceImageOCID:
+    type: oci:core:image:id
+    required: true
+    title: Instance Image OCID
+    dependsOn:
+      compartmentId: compartment_ocid
+
+  instanceShape:
+    type: oci:core:instanceshape:name
+    required: true
+    title: Instance Shape
+    default: "VM.Standard.E2.1.Micro"
+    dependsOn:
+      compartmentId: compartment_ocid
+
+  ssh_public_key:
+    type: oci:core:ssh:publickey
+    required: true
+    title: SSH Public Key
